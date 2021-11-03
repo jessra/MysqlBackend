@@ -1,0 +1,11 @@
+{
+    "app_name": "backendmysql",
+    "app_description": "Aquí podrá llevar el registro de diferentes equipos de computación",
+    "db": {
+        "host": "localhost",
+        "database": "backendmysql",
+        "user": "root",
+        "password": "",
+        "dialect": "mysql"
+    }
+}
