@@ -5,6 +5,10 @@ const config = require('./config.json');
 global.config = config;
 const UsersTable = require('./orm/users-table');
 global.UsersTable = UsersTable;
+const ProcessorsTable = require('./orm/processors-table');
+global.ProcessorsTable = ProcessorsTable;
+const MarcaTable = require('./orm/marca-table');
+global.MarcaTable = MarcaTable;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
