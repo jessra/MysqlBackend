@@ -9,6 +9,8 @@ const ProcessorsTable = require('./orm/processors-table');
 global.ProcessorsTable = ProcessorsTable;
 const MarcaTable = require('./orm/marca-table');
 global.MarcaTable = MarcaTable;
+const PlacaTable = require('./orm/placasmadre-table');
+global.PlacaTable = PlacaTable;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

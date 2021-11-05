@@ -1,5 +1,6 @@
 const express = require('express');
 const MarcaTable = require('../orm/marca-table');
+const PlacasTable = require('../orm/placasmadre-table');
 const ProcessorsTable = require('../orm/processors-table');
 const UsersTable = require('../orm/users-table');
 const collector = express.Router();
@@ -18,6 +19,10 @@ collector.post('/:equipo?', function(req, res, next) {
     if (req.body !== {}) {
       res.send(agregarProcesador(req.body.name, req.body.codigo, req.body.nucleos, req.body.marca, req.body.user, req.body.password))
     }
+  } else if (req.params.equipo === 'placa') {
+    if (req.body !== {}) {
+      res.send(agregarPlaca(req.body.name, req.body.codigo, req.body.ranuras, req.body.marca, req.body.user, req.body.password))
+    }
   }
 });
 
@@ -34,6 +39,16 @@ class Procesador {
     this.name = name;
     this.codigo = codigo;
     this.nucleos = nucleos;
+    this.marca = marca;
+    this.user = user;
+    this.password = password;
+  }
+}
+class Placa {
+  constructor(name, codigo, ranuras, marca, user, password) {
+    this.name = name;
+    this.codigo = codigo;
+    this.ranuras = ranuras;
     this.marca = marca;
     this.user = user;
     this.password = password;
@@ -78,11 +93,39 @@ async function agregarProcesador (Name, Codigo, Nucleos, Marca, User, Password) 
       })
     }
     await ProcessorsTable.create({
-    name_pro : procesador.name,
-    codigo_pro : procesador.codigo,
-    nucleos_pro : procesador.nucleos,
-    MarcaTableIdMar : idMar.id_mar,
-    UsersTableIdUser : user.id_user
+      name_pro : procesador.name,
+      codigo_pro : procesador.codigo,
+      nucleos_pro : procesador.nucleos,
+      MarcaTableIdMar : idMar.id_mar,
+      UsersTableIdUser : user.id_user
+    })
+  } catch (error) {
+    console.log(error.message)
+    return 'Ha ocurrido un problema: ' + error.message
+  }
+}
+async function agregarPlaca (Name, Codigo, Ranuras, Marca, User, Password) {
+  try {
+    const placa = await new Placa(Name, Codigo, Ranuras, Marca, User, Password)
+    const user = await validarUser(placa.user, placa.password)
+    if (user === null) return error
+    let idPla = await MarcaTable.findOne({
+      where : {name_mar : placa.marca}
+    })
+    if (idPla === null) {
+      await MarcaTable.create({
+        name_mar : placa.marca
+      })
+      idPla = await MarcaTable.findOne({
+        where : {name_mar : placa.marca}
+      })
+    }
+    await PlacaTable.create({
+      name_pla : placa.name,
+      codigo_pla : placa.codigo,
+      ranuras_pla : placa.ranuras,
+      MarcaTableIdMar : idPla.id_mar,
+      UsersTableIdUser : user.id_user
     })
   } catch (error) {
     console.log(error.message)
