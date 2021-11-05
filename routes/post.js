@@ -14,11 +14,11 @@ const collector = express.Router();
 // Registrarse
 collector.post('/registrarse', function(req, res, next) {
   if (req.body !== {}) {
-    async function Menssage (Name, User, Password) {
+    async function MenssageRe (Name, User, Password) {
       const message = await agregarUser(Name, User, Password)
       res.send(message)
     }
-    Menssage (req.body.name, req.body.user, req.body.password)
+    MenssageRe (req.body.name, req.body.user, req.body.password)
   } else {
     res.send('Ingrese los datos')
   }
@@ -27,51 +27,51 @@ collector.post('/registrarse', function(req, res, next) {
 collector.post('/:equipo?', function(req, res, next) {
   if (req.params.equipo === 'procesador') {
     if (req.body !== {}) {
-      async function Menssage (Name, Codigo, Nucleos, Marca, User, Password) {
+      async function MenssagePro (Name, Codigo, Nucleos, Marca, User, Password) {
         const message = await agregarProcesador(Name, Codigo, Nucleos, Marca, User, Password)
         res.send(message)
       }
-      Menssage (req.body.name, req.body.codigo, req.body.nucleos, req.body.marca, req.body.user, req.body.password)
+      MenssagePro (req.body.name, req.body.codigo, req.body.nucleos, req.body.marca, req.body.user, req.body.password)
     } else {
       res.send('Ingrese los datos')
     }
   } else if (req.params.equipo === 'placa') {
     if (req.body !== {}) {
-      async function Menssage (Name, Codigo, Ranuras, Marca, User, Password) {
+      async function MenssagePla (Name, Codigo, Ranuras, Marca, User, Password) {
         const message = await agregarPlaca(Name, Codigo, Ranuras, Marca, User, Password)
         res.send(message)
       }
-      Menssage (req.body.name, req.body.codigo, req.body.ranuras, req.body.marca, req.body.user, req.body.password)
+      MenssagePla (req.body.name, req.body.codigo, req.body.ranuras, req.body.marca, req.body.user, req.body.password)
     } else {
       res.send('Ingrese los datos')
     }
   } else if (req.params.equipo === 'memoria') {
     if (req.body !== {}) {
-      async function Menssage (Name, Codigo, Capacidad, Tipo, Marca, User, Password) {
+      async function MenssageMe (Name, Codigo, Capacidad, Tipo, Marca, User, Password) {
         const message = await agregarMemoria(Name, Codigo, Capacidad, Tipo, Marca, User, Password)
         res.send(message)
       }
-      Menssage (req.body.name, req.body.codigo, req.body.capacidad, req.body.tipo, req.body.marca, req.body.user, req.body.password)
+      MenssageMe (req.body.name, req.body.codigo, req.body.capacidad, req.body.tipo, req.body.marca, req.body.user, req.body.password)
     } else {
       res.send('Ingrese los datos')
     }
   } else if (req.params.equipo === 'disco') {
     if (req.body !== {}) {
-      async function Menssage (Name, Codigo, Funcion, Tipo, Marca, User, Password) {
+      async function MenssageDis (Name, Codigo, Funcion, Tipo, Marca, User, Password) {
         const message = await agregarDisco(Name, Codigo, Funcion, Tipo, Marca, User, Password)
         res.send(message)
       }
-      Menssage (req.body.name, req.body.codigo, req.body.funcion, req.body.tipo, req.body.marca, req.body.user, req.body.password)
+      MenssageDis (req.body.name, req.body.codigo, req.body.funcion, req.body.tipo, req.body.marca, req.body.user, req.body.password)
     } else {
       res.send('Ingrese los datos')
     }
   } else if (req.params.equipo === 'tarjeta') {
     if (req.body !== {}) {
-      async function Menssage (Name, Codigo, Funcion, Tipo, Marca, User, Password) {
+      async function MenssageTar (Name, Codigo, Funcion, Tipo, Marca, User, Password) {
         const message = await agregarTarjeta(Name, Codigo, Funcion, Tipo, Marca, User, Password)
         res.send(message)
       }
-      Menssage (req.body.name, req.body.codigo, req.body.funcion, req.body.tipo, req.body.marca, req.body.user, req.body.password)
+      MenssageTar (req.body.name, req.body.codigo, req.body.funcion, req.body.tipo, req.body.marca, req.body.user, req.body.password)
     } else {
       res.send('Ingrese los datos')
     }

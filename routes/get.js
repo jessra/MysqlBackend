@@ -1,16 +1,214 @@
 const express = require('express');
+const DiscoTable = require('../orm/discoduro-table');
+const MemoriaTable = require('../orm/memorias-table');
+const PlacaTable = require('../orm/placasmadre-table');
+const ProcessorsTable = require('../orm/processors-table');
+const TarjetaTable = require('../orm/tarjetadevideo-table');
 const collector = express.Router();
 
-/* GET home page. */
+// GET
 collector.get('/', function(req, res, next) {
   res.send("Bienvenido! Este servidor te permite mantener un registro de diferentes equipos de computación. Para más información dirígete a /informacion");
 });
 
-// // POST
-// collector.post('/registrarse', function(req, res, next) {
-//   if (req.body !== {}) {
-   
-//   }
-// });
+collector.get('/informacion',
+  function(req, res, next) {
+  res.write("<p>1. Asegurate de estar registrado para poder utilizar el programa, para ello debes dirigirte a /post/registrarse </p>");
+  next();
+  },
+  function(req, res, next) {
+  res.write("<p>2. Para visualizar tus equipos almacenados dirígete a /misequipos/ + tu user + / + tu contraseña. </p>");
+  next();
+  },
+  function(req, res, next) {
+  res.write("<p>3. Para visualizar un equipo en específico almacenado dirígete a / + el equipo que desees buscar. </p>");
+  next();
+  },
+  function(req, res, next) {
+  res.write("<p>4. Para almacenar algún equipo dirígete a / + el nombre del equipo que desees almacenar. </p>");
+  next();
+  }
+);
+
+collector.get('/misequipos/:user?/:password?', function(req, res, next) {
+  if (req.params.user !== undefined && req.params.password !== undefined){
+    async function MessageE (User, Password) {
+    const misequipos = await buscarEquipos(User, Password)
+    console.log(misequipos)
+    res.send(misequipos)
+    }
+    MessageE (req.params.user, req.params.password)
+  } else {
+    res.send('Recuerda ingresar tu user y contraseña')
+  }
+})
+collector.get('/:equipo?/:user?/:password?', function(req, res, next) {
+  if (req.params.user !== undefined && req.params.password !== undefined){
+    if (req.params.equipo === 'procesador') {
+      async function MenssagePro (User, Password) {
+        const message = await buscarProcesador(User, Password);
+        res.send(message)
+      }
+      MenssagePro(req.params.user, req.params.password)
+    } else if (req.params.equipo === 'tarjeta') {
+      async function MenssageTar (User, Password) {
+        const message = await buscarTarjeta(User, Password);
+        res.send(message)
+      }
+      MenssageTar(req.params.user, req.params.password)
+    } else if (req.params.equipo === 'placa') {
+      async function MenssagePla (User, Password) {
+        const message = await buscarPlaca(User, Password);
+        res.send(message)
+      }
+      MenssagePla(req.params.user, req.params.password)
+    } else if (req.params.equipo === 'memoria') {
+      async function MenssageMe (User, Password) {
+        const message = await buscarMemoria(User, Password);
+        res.send(message)
+      }
+      MenssageMe(req.params.user, req.params.password)
+    } else if (req.params.equipo === 'disco') {
+      async function MenssageMe (User, Password) {
+        const message = await buscarDisco(User, Password);
+        res.send(message)
+      }
+      MenssageMe(req.params.user, req.params.password)
+    } else {
+      res.send('Este tipo de equipo no está disponible por el momento')
+    }
+  }
+})
+
+//Clases
+class Equipo {
+  constructor (procesador, tarjeta, placa, memoria, disco) {
+    this.procesadores = procesador,
+    this.tarjetas = tarjeta,
+    this.placas = placa,
+    this.memorias = memoria,
+    this.discos = disco
+  }
+}
+//Funciones
+
+async function validarUser (User, Password) {
+  const idUser = await UsersTable.findOne({
+    where : {user : User, password: Password}
+  })
+  return idUser
+}
+async function Pro (User) {
+  let pro = await ProcessorsTable.findAll({
+    where : {UsersTableIdUser : User}
+  })
+  if (!Pro.length) {
+    pro = 'No tienes procesadores almacenados'
+  }
+  return pro
+}
+async function Tar (User) {
+  let tar = await TarjetaTable.findAll({
+    where : {UsersTableIdUser : User}
+  })
+  if (!tar.length) {
+    tar = 'No tienes tarjetas almacenadas'
+  }
+  return tar
+}
+async function Pla (User) {
+  let pla = await PlacaTable.findAll({
+    where : {UsersTableIdUser : User}
+  })
+  if (!pla.length) {
+    pla = 'No tienes placas almacenadas'
+  }
+  return pla
+}
+async function Me (User) {
+  let me = await MemoriaTable.findAll({
+    where : {UsersTableIdUser : User}
+  })
+  if (!me.length) {
+    me = 'No tienes memorias almacenadas'
+  }
+  return me
+}
+async function Dis (User) {
+  let dis = await DiscoTable.findAll({
+    where : {UsersTableIdUser : User}
+  })
+  if (!dis.length) {
+    dis = 'No tienes discos almacenados'
+  }
+  return dis
+}
+async function buscarEquipos(User, Password) {
+  try {
+    const user = await validarUser(User, Password)
+    if (user === null) return error
+    const procesador = await Pro(user.id_user)
+    const tarjeta = await Tar(user.id_user)
+    const placa = await Pla(user.id_user)
+    const memoria = await Me(user.id_user)
+    const disco = await Dis(user.id_user)
+
+    const equipo = new Equipo(procesador, tarjeta, placa, memoria, disco)
+
+    return equipo
+  } catch (error) {
+    return 'Ha ocurrido un problema: ' + error.message 
+  }
+}
+async function buscarProcesador (User, Password) {
+  try {
+    const user = await validarUser(User, Password)
+    if (user === null) return error
+    const procesador = await Pro(user.id_user)
+    return procesador
+  } catch (error) {
+    return 'Ha ocurrido un problema: ' + error.message 
+  }
+}
+async function buscarTarjeta (User, Password) {
+  try {
+    const user = await validarUser(User, Password)
+    if (user === null) return error
+    const tarjeta = await Tar(user.id_user)
+    return tarjeta
+  } catch (error) {
+    return 'Ha ocurrido un problema: ' + error.message 
+  }
+}
+async function buscarPlaca (User, Password) {
+  try {
+    const user = await validarUser(User, Password)
+    if (user === null) return error
+    const placa = await Pla(user.id_user)
+    return placa
+  } catch (error) {
+    return 'Ha ocurrido un problema: ' + error.message 
+  }
+}
+async function buscarMemoria (User, Password) {
+  try {
+    const user = await validarUser(User, Password)
+    if (user === null) return error
+    const memoria = await Me(user.id_user)
+    return memoria
+  } catch (error) {
+    return 'Ha ocurrido un problema: ' + error.message 
+  }
+}
+async function buscarDisco (User, Password) {
+  try {
+    const user = await validarUser(User, Password)
+    if (user === null) return error
+    const disco = await Dis(user.id_user)
+    return disco
+  } catch (error) {
+    return 'Ha ocurrido un problema: ' + error.message 
+  }
+}
 
 module.exports = collector;
