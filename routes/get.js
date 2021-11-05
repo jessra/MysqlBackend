@@ -51,6 +51,18 @@ collector.get('/informacion',
   function(req, res, next) {
   res.write("<p>5. Para eliminar una cuenta dirígete a / + el user + / + el contraseña. </p>");
   next();
+  },
+  function(req, res, next) {
+  res.write("<p>6. Para eliminar todo un equipo dirígete a / + el nombre del equipo + / + el user + / + el contraseña. </p>");
+  next();
+  },
+  function(req, res, next) {
+  res.write("<p>7. Para eliminar un equipo en específico dirígete a / + el nombre del equipo + / + el id + / + el user + / + el contraseña. </p>");
+  next();
+  },
+  function(req, res, next) {
+  res.write("<p>7. Para eliminar algún dato de las especificaciones en especias dirígete a /espe/ + el nombre de la especificación + / + el id + / + el user + / + el contraseña. </p>");
+  next();
   }
 );
 

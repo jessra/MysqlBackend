@@ -106,6 +106,37 @@ collector.delete('/:equipo?/:user?/:password?', function(req, res, next) {
         res.send('Recuerda ingresar tu user y contraseña')
       }
   });
+  collector.delete('/espe/:especificacion?/:id?/:user?/:password?', function(req, res, next) {
+    if (req.params.user !== undefined && req.params.password !== undefined){
+      if (req.params.especificacion === 'marca') {
+        async function MessageMar (User, Password, Id) {
+          const message = await eliminarMarca(User, Password, Id)
+          res.send(message)
+        }
+        MessageMar (req.params.user, req.params.password, req.params.id)
+      } else if (req.params.especificacion === 'funcion') {
+        async function MessageFun (User, Password, Id) {
+          const message = await eliminarFuncion(User, Password, Id)
+          res.send(message)
+        }
+        MessageFun (req.params.user, req.params.password, req.params.id)
+      } else if (req.params.especificacion === 'capacidad') {
+        async function MessageCa (User, Password, Id) {
+          const message = await eliminarCapacidad(User, Password, Id)
+          res.send(message)
+        }
+        MessageCa (req.params.user, req.params.password, req.params.id)
+      } else if (req.params.especificacion === 'tipo') {
+        async function MessageTi (User, Password, Id) {
+          const message = await eliminarTipo(User, Password, Id)
+          res.send(message)
+        }
+        MessageTi (req.params.user, req.params.password, req.params.id)
+      } else {
+        res.send('Este tipo de equipo no está disponible por el momento')
+      }
+    }
+  })
 
 //Funciones
 
@@ -237,5 +268,56 @@ async function eliminarProcesador (User, Password, Id) {
       return 'Ha ocurrido un problema: ' + error.message 
     }
   }
-
+  async function eliminarMarca (User, Password, Id) {
+    try {
+      const user = await validarUser(User, Password)
+      if (user === null) return error
+      await MarcaTable.destroy({
+        where : {id_mar : Id}
+      });
+     const message = 'Se han eliminado la marca en la posición ' + Id + ' correctamente'
+      return message
+    } catch (error) {
+      return 'Ha ocurrido un problema: ' + error.message 
+    }
+  }
+  async function eliminarFuncion (User, Password, Id) {
+    try {
+        const user = await validarUser(User, Password)
+        if (user === null) return error
+        await FuncionTable.destroy({
+          where : {id_fun : Id}
+        });
+       const message = 'Se han eliminado la funcion en la posición ' + Id + ' correctamente'
+        return message
+    } catch (error) {
+      return 'Ha ocurrido un problema: ' + error.message 
+    }
+  }
+  async function eliminarCapacidad (User, Password, Id) {
+    try {
+        const user = await validarUser(User, Password)
+        if (user === null) return error
+        await CapacidadTable.destroy({
+          where : {id_ca : Id}
+        });
+       const message = 'Se han eliminado la capacidad en la posición ' + Id + ' correctamente'
+        return message
+    } catch (error) {
+      return 'Ha ocurrido un problema: ' + error.message 
+    }
+  }
+  async function eliminarTipo (User, Password, Id) {
+    try {
+        const user = await validarUser(User, Password)
+        if (user === null) return error
+        await TipoTable.destroy({
+          where : {id_tipo : Id}
+        });
+       const message = 'Se han eliminado el tipo en la posición ' + Id + ' correctamente'
+        return message
+    } catch (error) {
+      return 'Ha ocurrido un problema: ' + error.message 
+    }
+  }
 module.exports = collector;
