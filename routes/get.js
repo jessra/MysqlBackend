@@ -17,6 +17,10 @@ collector.get('/', function(req, res, next) {
 
 collector.get('/informacion',
   function(req, res, next) {
+  res.write("<p> /get </p>");
+  next();
+  },
+  function(req, res, next) {
   res.write("<p>1. Asegurate de estar registrado para poder utilizar el programa, para ello debes dirigirte a /post/registrarse </p>");
   next();
   },
@@ -33,7 +37,19 @@ collector.get('/informacion',
   next();
   },
   function(req, res, next) {
+  res.write("<p> /post </p>");
+  next();
+  },
+  function(req, res, next) {
   res.write("<p>4. Para almacenar algún equipo dirígete a / + el nombre del equipo que desees almacenar. </p>");
+  next();
+  },
+  function(req, res, next) {
+  res.write("<p> /delete </p>");
+  next();
+  },
+  function(req, res, next) {
+  res.write("<p>5. Para eliminar una cuenta dirígete a / + el user + / + el contraseña. </p>");
   next();
   }
 );
