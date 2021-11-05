@@ -1,9 +1,12 @@
 const express = require('express');
 const CapacidadTable = require('../orm/capacidad-table');
+const DiscoTable = require('../orm/discoduro-table');
+const FuncionTable = require('../orm/funcion-table');
 const MarcaTable = require('../orm/marca-table');
 const MemoriaTable = require('../orm/memorias-table');
-const PlacasTable = require('../orm/placasmadre-table');
+const PlacaTable = require('../orm/placasmadre-table');
 const ProcessorsTable = require('../orm/processors-table');
+const TipoTable = require('../orm/tipos-table');
 const UsersTable = require('../orm/users-table');
 const collector = express.Router();
 
@@ -32,6 +35,12 @@ collector.post('/:equipo?', function(req, res, next) {
   } else if (req.params.equipo === 'memoria') {
     if (req.body !== {}) {
       res.send(agregarMemoria(req.body.name, req.body.codigo, req.body.capacidad, req.body.tipo, req.body.marca, req.body.user, req.body.password))
+    } else {
+      res.send('Ingrese los datos')
+    }
+  } else if (req.params.equipo === 'disco') {
+    if (req.body !== {}) {
+      res.send(agregarDisco(req.body.name, req.body.codigo, req.body.funcion, req.body.tipo, req.body.marca, req.body.user, req.body.password))
     } else {
       res.send('Ingrese los datos')
     }
@@ -71,6 +80,17 @@ class Memoria {
     this.name = name;
     this.codigo = codigo;
     this.capacidad = capacidad;
+    this.tipo = tipo;
+    this.marca = marca;
+    this.user = user;
+    this.password = password;
+  }
+}
+class Disco {
+  constructor(name, codigo, funcion, tipo, marca, user, password) {
+    this.name = name;
+    this.codigo = codigo;
+    this.funcion = funcion;
     this.tipo = tipo;
     this.marca = marca;
     this.user = user;
@@ -197,6 +217,57 @@ async function agregarMemoria (Name, Codigo, Capacidad, Tipo, Marca, User, Passw
       name_me : memoria.name,
       codigo_me : memoria.codigo,
       CapacidadTableIdCa : idCa.id_ca,
+      TipoTableIdTipo : idTipo.id_tipo,
+      MarcaTableIdMar : idMar.id_mar,
+      UsersTableIdUser : user.id_user
+    })
+  } catch (error) {
+    console.log(error.message)
+    return 'Ha ocurrido un problema: ' + error.message
+  }
+}
+async function agregarDisco (Name, Codigo, Funcion, Tipo, Marca, User, Password) {
+  try {
+    const disco = await new Disco(Name, Codigo, Funcion, Tipo, Marca, User, Password)
+    const user = await validarUser(disco.user, disco.password)
+    if (user === null) return error
+    let idMar = await MarcaTable.findOne({
+      where : {name_mar : disco.marca}
+    })
+    if (idMar === null) {
+      await MarcaTable.create({
+        name_mar : disco.marca
+      })
+      idMar = await MarcaTable.findOne({
+        where : {name_mar : disco.marca}
+      })
+    }
+    let idFun = await FuncionTable.findOne({
+      where : {tipo_fun : disco.funcion}
+    })
+    if (idFun === null) {
+      await FuncionTable.create({
+        tipo_fun : disco.funcion
+      })
+      idFun = await FuncionTable.findOne({
+        where : {tipo_fun : disco.funcion}
+      })
+    }
+    let idTipo = await TipoTable.findOne({
+      where : {name_tipo : disco.tipo}
+    })
+    if (idTipo === null) {
+      await TipoTable.create({
+        name_tipo : disco.tipo
+      })
+      idTipo = await TipoTable.findOne({
+        where : {name_tipo : disco.tipo}
+      })
+    }
+    await DiscoTable.create({
+      name_dis : disco.name,
+      codigo_dis : disco.codigo,
+      FuncionTableIdFun : idFun.id_fun,
       TipoTableIdTipo : idTipo.id_tipo,
       MarcaTableIdMar : idMar.id_mar,
       UsersTableIdUser : user.id_user

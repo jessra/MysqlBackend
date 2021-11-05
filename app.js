@@ -17,6 +17,10 @@ const Memoria = require('./orm/memorias-table');
 global.Memoria = Memoria;
 const TipoTable = require('./orm/tipos-table');
 global.TipoTable = TipoTable;
+const FuncionTable = require('./orm/funcion-table');
+global.FuncionTable = FuncionTable;
+const DiscoTable = require('./orm/discoduro-table');
+global.DiscoTable = DiscoTable;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
