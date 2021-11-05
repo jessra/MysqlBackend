@@ -1,5 +1,7 @@
 const express = require('express');
+const CapacidadTable = require('../orm/capacidad-table');
 const MarcaTable = require('../orm/marca-table');
+const MemoriaTable = require('../orm/memorias-table');
 const PlacasTable = require('../orm/placasmadre-table');
 const ProcessorsTable = require('../orm/processors-table');
 const UsersTable = require('../orm/users-table');
@@ -18,10 +20,20 @@ collector.post('/:equipo?', function(req, res, next) {
   if (req.params.equipo === 'procesador') {
     if (req.body !== {}) {
       res.send(agregarProcesador(req.body.name, req.body.codigo, req.body.nucleos, req.body.marca, req.body.user, req.body.password))
+    } else {
+      res.send('Ingrese los datos')
     }
   } else if (req.params.equipo === 'placa') {
     if (req.body !== {}) {
       res.send(agregarPlaca(req.body.name, req.body.codigo, req.body.ranuras, req.body.marca, req.body.user, req.body.password))
+    } else {
+      res.send('Ingrese los datos')
+    }
+  } else if (req.params.equipo === 'memoria') {
+    if (req.body !== {}) {
+      res.send(agregarMemoria(req.body.name, req.body.codigo, req.body.capacidad, req.body.tipo, req.body.marca, req.body.user, req.body.password))
+    } else {
+      res.send('Ingrese los datos')
     }
   }
 });
@@ -49,6 +61,17 @@ class Placa {
     this.name = name;
     this.codigo = codigo;
     this.ranuras = ranuras;
+    this.marca = marca;
+    this.user = user;
+    this.password = password;
+  }
+}
+class Memoria {
+  constructor(name, codigo, capacidad, tipo, marca, user, password) {
+    this.name = name;
+    this.codigo = codigo;
+    this.capacidad = capacidad;
+    this.tipo = tipo;
     this.marca = marca;
     this.user = user;
     this.password = password;
@@ -125,6 +148,57 @@ async function agregarPlaca (Name, Codigo, Ranuras, Marca, User, Password) {
       codigo_pla : placa.codigo,
       ranuras_pla : placa.ranuras,
       MarcaTableIdMar : idPla.id_mar,
+      UsersTableIdUser : user.id_user
+    })
+  } catch (error) {
+    console.log(error.message)
+    return 'Ha ocurrido un problema: ' + error.message
+  }
+}
+async function agregarMemoria (Name, Codigo, Capacidad, Tipo, Marca, User, Password) {
+  try {
+    const memoria = await new Memoria(Name, Codigo, Capacidad, Tipo, Marca, User, Password)
+    const user = await validarUser(memoria.user, memoria.password)
+    if (user === null) return error
+    let idMar = await MarcaTable.findOne({
+      where : {name_mar : memoria.marca}
+    })
+    if (idMar === null) {
+      await MarcaTable.create({
+        name_mar : memoria.marca
+      })
+      idMar = await MarcaTable.findOne({
+        where : {name_mar : memoria.marca}
+      })
+    }
+    let idCa = await CapacidadTable.findOne({
+      where : {nivel_ca : memoria.capacidad}
+    })
+    if (idCa === null) {
+      await CapacidadTable.create({
+        nivel_ca : memoria.capacidad
+      })
+      idCa = await CapacidadTable.findOne({
+        where : {nivel_ca : memoria.capacidad}
+      })
+    }
+    let idTipo = await TipoTable.findOne({
+      where : {name_tipo : memoria.tipo}
+    })
+    if (idTipo === null) {
+      await TipoTable.create({
+        name_tipo : memoria.tipo
+      })
+      idTipo = await TipoTable.findOne({
+        where : {name_tipo : memoria.tipo}
+      })
+    }
+    await MemoriaTable.create({
+      name_me : memoria.name,
+      codigo_me : memoria.codigo,
+      CapacidadTableIdCa : idCa.id_ca,
+      TipoTableIdTipo : idTipo.id_tipo,
+      MarcaTableIdMar : idMar.id_mar,
       UsersTableIdUser : user.id_user
     })
   } catch (error) {

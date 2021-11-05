@@ -11,6 +11,12 @@ const MarcaTable = require('./orm/marca-table');
 global.MarcaTable = MarcaTable;
 const PlacaTable = require('./orm/placasmadre-table');
 global.PlacaTable = PlacaTable;
+const CapacidadTable = require('./orm/capacidad-table');
+global.CapacidadTable = CapacidadTable;
+const Memoria = require('./orm/memorias-table');
+global.Memoria = Memoria;
+const TipoTable = require('./orm/tipos-table');
+global.TipoTable = TipoTable;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
