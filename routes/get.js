@@ -70,7 +70,6 @@ collector.get('/misequipos/:user?/:password?', function(req, res, next) {
   if (req.params.user !== undefined && req.params.password !== undefined){
     async function MessageE (User, Password) {
     const misequipos = await buscarEquipos(User, Password)
-    console.log(misequipos)
     res.send(misequipos)
     }
     MessageE (req.params.user, req.params.password)

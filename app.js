@@ -34,5 +34,7 @@ const routesPost = require("./routes/post.js");
 app.use('/post', routesPost);
 const routesDelete = require("./routes/delete.js");
 app.use('/delete', routesDelete);
+const routesPut = require("./routes/put.js");
+app.use('/put', routesPut);
 
 module.exports = app;
