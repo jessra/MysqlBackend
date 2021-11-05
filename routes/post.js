@@ -12,9 +12,12 @@ collector.post('/registrarse', function(req, res, next) {
     res.send('Ingrese los datos')
   }
 });
-collector.post('/procesador', function(req, res, next) {
-  if (req.body !== {}) {
-    res.send(agregarProcesador(req.body.name, req.body.codigo, req.body.nucleos, req.body.marca, req.body.user))
+//Equipos de computación
+collector.post('/:equipo?', function(req, res, next) {
+  if (req.params.equipo === 'procesador') {
+    if (req.body !== {}) {
+      res.send(agregarProcesador(req.body.name, req.body.codigo, req.body.nucleos, req.body.marca, req.body.user, req.body.password))
+    }
   }
 });
 
@@ -27,12 +30,13 @@ class Registro {
   }
 }
 class Procesador {
-  constructor(name, codigo, nucleos, marca, user) {
+  constructor(name, codigo, nucleos, marca, user, password) {
     this.name = name;
     this.codigo = codigo;
     this.nucleos = nucleos;
     this.marca = marca;
     this.user = user;
+    this.password = password;
   }
 }
 
@@ -51,12 +55,17 @@ async function agregarUser (Name, User, Password) {
     return 'Ha ocurrido un problema: ' + error.message
   }
 }
-async function agregarProcesador (Name, Codigo, Nucleos, Marca, User) {
+async function validarUser (User, Password) {
+  const idUser = await UsersTable.findOne({
+    where : {user : User, password: Password}
+  })
+  return idUser
+}
+async function agregarProcesador (Name, Codigo, Nucleos, Marca, User, Password) {
   try {
-    const procesador = await new Procesador(Name, Codigo, Nucleos, Marca, User)
-    const idUser = await UsersTable.findOne({
-      where : {user : procesador.user}
-    })
+    const procesador = await new Procesador(Name, Codigo, Nucleos, Marca, User, Password)
+    const user = await validarUser(procesador.user, procesador.password)
+    if (user === null) return error
     let idMar = await MarcaTable.findOne({
       where : {name_mar : procesador.marca}
     })
@@ -73,9 +82,10 @@ async function agregarProcesador (Name, Codigo, Nucleos, Marca, User) {
     codigo_pro : procesador.codigo,
     nucleos_pro : procesador.nucleos,
     MarcaTableIdMar : idMar.id_mar,
-    UsersTableIdUser : idUser.id_user
+    UsersTableIdUser : user.id_user
     })
   } catch (error) {
+    console.log(error.message)
     return 'Ha ocurrido un problema: ' + error.message
   }
 }
