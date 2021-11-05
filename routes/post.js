@@ -14,7 +14,11 @@ const collector = express.Router();
 // Registrarse
 collector.post('/registrarse', function(req, res, next) {
   if (req.body !== {}) {
-    res.send(agregarUser(req.body.name, req.body.user, req.body.password))
+    async function Menssage (Name, User, Password) {
+      const message = await agregarUser(Name, User, Password)
+      res.send(message)
+    }
+    Menssage (req.body.name, req.body.user, req.body.password)
   } else {
     res.send('Ingrese los datos')
   }
@@ -23,31 +27,51 @@ collector.post('/registrarse', function(req, res, next) {
 collector.post('/:equipo?', function(req, res, next) {
   if (req.params.equipo === 'procesador') {
     if (req.body !== {}) {
-      res.send(agregarProcesador(req.body.name, req.body.codigo, req.body.nucleos, req.body.marca, req.body.user, req.body.password))
+      async function Menssage (Name, Codigo, Nucleos, Marca, User, Password) {
+        const message = await agregarProcesador(Name, Codigo, Nucleos, Marca, User, Password)
+        res.send(message)
+      }
+      Menssage (req.body.name, req.body.codigo, req.body.nucleos, req.body.marca, req.body.user, req.body.password)
     } else {
       res.send('Ingrese los datos')
     }
   } else if (req.params.equipo === 'placa') {
     if (req.body !== {}) {
-      res.send(agregarPlaca(req.body.name, req.body.codigo, req.body.ranuras, req.body.marca, req.body.user, req.body.password))
+      async function Menssage (Name, Codigo, Ranuras, Marca, User, Password) {
+        const message = await agregarPlaca(Name, Codigo, Ranuras, Marca, User, Password)
+        res.send(message)
+      }
+      Menssage (req.body.name, req.body.codigo, req.body.ranuras, req.body.marca, req.body.user, req.body.password)
     } else {
       res.send('Ingrese los datos')
     }
   } else if (req.params.equipo === 'memoria') {
     if (req.body !== {}) {
-      res.send(agregarMemoria(req.body.name, req.body.codigo, req.body.capacidad, req.body.tipo, req.body.marca, req.body.user, req.body.password))
+      async function Menssage (Name, Codigo, Capacidad, Tipo, Marca, User, Password) {
+        const message = await agregarMemoria(Name, Codigo, Capacidad, Tipo, Marca, User, Password)
+        res.send(message)
+      }
+      Menssage (req.body.name, req.body.codigo, req.body.capacidad, req.body.tipo, req.body.marca, req.body.user, req.body.password)
     } else {
       res.send('Ingrese los datos')
     }
   } else if (req.params.equipo === 'disco') {
     if (req.body !== {}) {
-      res.send(agregarDisco(req.body.name, req.body.codigo, req.body.funcion, req.body.tipo, req.body.marca, req.body.user, req.body.password))
+      async function Menssage (Name, Codigo, Funcion, Tipo, Marca, User, Password) {
+        const message = await agregarDisco(Name, Codigo, Funcion, Tipo, Marca, User, Password)
+        res.send(message)
+      }
+      Menssage (req.body.name, req.body.codigo, req.body.funcion, req.body.tipo, req.body.marca, req.body.user, req.body.password)
     } else {
       res.send('Ingrese los datos')
     }
   } else if (req.params.equipo === 'tarjeta') {
     if (req.body !== {}) {
-      res.send(agregarTarjeta(req.body.name, req.body.codigo, req.body.funcion, req.body.tipo, req.body.marca, req.body.user, req.body.password))
+      async function Menssage (Name, Codigo, Funcion, Tipo, Marca, User, Password) {
+        const message = await agregarTarjeta(Name, Codigo, Funcion, Tipo, Marca, User, Password)
+        res.send(message)
+      }
+      Menssage (req.body.name, req.body.codigo, req.body.funcion, req.body.tipo, req.body.marca, req.body.user, req.body.password)
     } else {
       res.send('Ingrese los datos')
     }
@@ -62,6 +86,7 @@ class Registro {
     this.name = name;
     this.user = user;
     this.password = password;
+    this.message = 'Te has registrado satisfactoriamente,' + this.user;
   }
 }
 class Procesador {
@@ -72,6 +97,7 @@ class Procesador {
     this.marca = marca;
     this.user = user;
     this.password = password;
+    this.message = this.user + ', se ha almacenado correctamente un procesador';
   }
 }
 class Placa {
@@ -82,6 +108,7 @@ class Placa {
     this.marca = marca;
     this.user = user;
     this.password = password;
+    this.message = this.user + ', se ha almacenado correctamente una placa';
   }
 }
 class Memoria {
@@ -93,6 +120,7 @@ class Memoria {
     this.marca = marca;
     this.user = user;
     this.password = password;
+    this.message = this.user + ', se ha almacenado correctamente una memoria';
   }
 }
 class Disco {
@@ -104,6 +132,7 @@ class Disco {
     this.marca = marca;
     this.user = user;
     this.password = password;
+    this.message = this.user + ', se ha almacenado correctamente un disco';
   }
 }
 class Tarjeta {
@@ -115,20 +144,22 @@ class Tarjeta {
     this.marca = marca;
     this.user = user;
     this.password = password;
+    this.message = this.user + ', se ha almacenado correctamente una tarjeta';
   }
 }
 
 //Funciones
 async function agregarUser (Name, User, Password) {
   try {
-    const user = await new Registro(Name, User, Password)
+    const user = new Registro(Name, User, Password)
+    console.log(user)
+    console.log(user.name)
     await UsersTable.create({
       name : user.name,
       user : user.user,
       password : user.password
     })
-    const message = 'Te has registrado satisfactoriamente, ' + user.name
-    return message
+    return user.message
   } catch (error) {
     return 'Ha ocurrido un problema: ' + error.message
   }
@@ -141,7 +172,7 @@ async function validarUser (User, Password) {
 }
 async function agregarProcesador (Name, Codigo, Nucleos, Marca, User, Password) {
   try {
-    const procesador = await new Procesador(Name, Codigo, Nucleos, Marca, User, Password)
+    const procesador = new Procesador(Name, Codigo, Nucleos, Marca, User, Password)
     const user = await validarUser(procesador.user, procesador.password)
     if (user === null) return error
     let idMar = await MarcaTable.findOne({
@@ -162,14 +193,14 @@ async function agregarProcesador (Name, Codigo, Nucleos, Marca, User, Password) 
       MarcaTableIdMar : idMar.id_mar,
       UsersTableIdUser : user.id_user
     })
+    return procesador.message
   } catch (error) {
-    console.log(error.message)
     return 'Ha ocurrido un problema: ' + error.message
   }
 }
 async function agregarPlaca (Name, Codigo, Ranuras, Marca, User, Password) {
   try {
-    const placa = await new Placa(Name, Codigo, Ranuras, Marca, User, Password)
+    const placa = new Placa(Name, Codigo, Ranuras, Marca, User, Password)
     const user = await validarUser(placa.user, placa.password)
     if (user === null) return error
     let idPla = await MarcaTable.findOne({
@@ -190,14 +221,14 @@ async function agregarPlaca (Name, Codigo, Ranuras, Marca, User, Password) {
       MarcaTableIdMar : idPla.id_mar,
       UsersTableIdUser : user.id_user
     })
+    return placa.message
   } catch (error) {
-    console.log(error.message)
     return 'Ha ocurrido un problema: ' + error.message
   }
 }
 async function agregarMemoria (Name, Codigo, Capacidad, Tipo, Marca, User, Password) {
   try {
-    const memoria = await new Memoria(Name, Codigo, Capacidad, Tipo, Marca, User, Password)
+    const memoria = new Memoria(Name, Codigo, Capacidad, Tipo, Marca, User, Password)
     const user = await validarUser(memoria.user, memoria.password)
     if (user === null) return error
     let idMar = await MarcaTable.findOne({
@@ -241,14 +272,14 @@ async function agregarMemoria (Name, Codigo, Capacidad, Tipo, Marca, User, Passw
       MarcaTableIdMar : idMar.id_mar,
       UsersTableIdUser : user.id_user
     })
+    return memoria.message
   } catch (error) {
-    console.log(error.message)
     return 'Ha ocurrido un problema: ' + error.message
   }
 }
 async function agregarDisco (Name, Codigo, Funcion, Tipo, Marca, User, Password) {
   try {
-    const disco = await new Disco(Name, Codigo, Funcion, Tipo, Marca, User, Password)
+    const disco = new Disco(Name, Codigo, Funcion, Tipo, Marca, User, Password)
     const user = await validarUser(disco.user, disco.password)
     if (user === null) return error
     let idMar = await MarcaTable.findOne({
@@ -292,14 +323,14 @@ async function agregarDisco (Name, Codigo, Funcion, Tipo, Marca, User, Password)
       MarcaTableIdMar : idMar.id_mar,
       UsersTableIdUser : user.id_user
     })
+    return disco.message
   } catch (error) {
-    console.log(error.message)
     return 'Ha ocurrido un problema: ' + error.message
   }
 }
 async function agregarTarjeta (Name, Codigo, Funcion, Tipo, Marca, User, Password) {
   try {
-    const tarjeta = await new Tarjeta(Name, Codigo, Funcion, Tipo, Marca, User, Password)
+    const tarjeta = new Tarjeta(Name, Codigo, Funcion, Tipo, Marca, User, Password)
     const user = await validarUser(tarjeta.user, tarjeta.password)
     if (user === null) return error
     let idMar = await MarcaTable.findOne({
@@ -343,8 +374,8 @@ async function agregarTarjeta (Name, Codigo, Funcion, Tipo, Marca, User, Passwor
       MarcaTableIdMar : idMar.id_mar,
       UsersTableIdUser : user.id_user
     })
+    return tarjeta.message
   } catch (error) {
-    console.log(error.message)
     return 'Ha ocurrido un problema: ' + error.message
   }
 }
