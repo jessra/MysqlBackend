@@ -6,6 +6,7 @@ const MarcaTable = require('../orm/marca-table');
 const MemoriaTable = require('../orm/memorias-table');
 const PlacaTable = require('../orm/placasmadre-table');
 const ProcessorsTable = require('../orm/processors-table');
+const TarjetaTable = require('../orm/tarjetadevideo-table');
 const TipoTable = require('../orm/tipos-table');
 const UsersTable = require('../orm/users-table');
 const collector = express.Router();
@@ -44,6 +45,14 @@ collector.post('/:equipo?', function(req, res, next) {
     } else {
       res.send('Ingrese los datos')
     }
+  } else if (req.params.equipo === 'tarjeta') {
+    if (req.body !== {}) {
+      res.send(agregarTarjeta(req.body.name, req.body.codigo, req.body.funcion, req.body.tipo, req.body.marca, req.body.user, req.body.password))
+    } else {
+      res.send('Ingrese los datos')
+    }
+  } else {
+    res.send('Este tipo de equipo no está disponible por el momento')
   }
 });
 
@@ -87,6 +96,17 @@ class Memoria {
   }
 }
 class Disco {
+  constructor(name, codigo, funcion, tipo, marca, user, password) {
+    this.name = name;
+    this.codigo = codigo;
+    this.funcion = funcion;
+    this.tipo = tipo;
+    this.marca = marca;
+    this.user = user;
+    this.password = password;
+  }
+}
+class Tarjeta {
   constructor(name, codigo, funcion, tipo, marca, user, password) {
     this.name = name;
     this.codigo = codigo;
@@ -267,6 +287,57 @@ async function agregarDisco (Name, Codigo, Funcion, Tipo, Marca, User, Password)
     await DiscoTable.create({
       name_dis : disco.name,
       codigo_dis : disco.codigo,
+      FuncionTableIdFun : idFun.id_fun,
+      TipoTableIdTipo : idTipo.id_tipo,
+      MarcaTableIdMar : idMar.id_mar,
+      UsersTableIdUser : user.id_user
+    })
+  } catch (error) {
+    console.log(error.message)
+    return 'Ha ocurrido un problema: ' + error.message
+  }
+}
+async function agregarTarjeta (Name, Codigo, Funcion, Tipo, Marca, User, Password) {
+  try {
+    const tarjeta = await new Tarjeta(Name, Codigo, Funcion, Tipo, Marca, User, Password)
+    const user = await validarUser(tarjeta.user, tarjeta.password)
+    if (user === null) return error
+    let idMar = await MarcaTable.findOne({
+      where : {name_mar : tarjeta.marca}
+    })
+    if (idMar === null) {
+      await MarcaTable.create({
+        name_mar : tarjeta.marca
+      })
+      idMar = await MarcaTable.findOne({
+        where : {name_mar : tarjeta.marca}
+      })
+    }
+    let idFun = await FuncionTable.findOne({
+      where : {tipo_fun : tarjeta.funcion}
+    })
+    if (idFun === null) {
+      await FuncionTable.create({
+        tipo_fun : tarjeta.funcion
+      })
+      idFun = await FuncionTable.findOne({
+        where : {tipo_fun : tarjeta.funcion}
+      })
+    }
+    let idTipo = await TipoTable.findOne({
+      where : {name_tipo : tarjeta.tipo}
+    })
+    if (idTipo === null) {
+      await TipoTable.create({
+        name_tipo : tarjeta.tipo
+      })
+      idTipo = await TipoTable.findOne({
+        where : {name_tipo : tarjeta.tipo}
+      })
+    }
+    await TarjetaTable.create({
+      name_tar : tarjeta.name,
+      codigo_tar : tarjeta.codigo,
       FuncionTableIdFun : idFun.id_fun,
       TipoTableIdTipo : idTipo.id_tipo,
       MarcaTableIdMar : idMar.id_mar,

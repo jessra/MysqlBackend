@@ -21,6 +21,8 @@ const FuncionTable = require('./orm/funcion-table');
 global.FuncionTable = FuncionTable;
 const DiscoTable = require('./orm/discoduro-table');
 global.DiscoTable = DiscoTable;
+const TarjetaTable = require('./orm/tarjetadevideo-table');
+global.TarjetaTable = TarjetaTable;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
