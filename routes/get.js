@@ -1,9 +1,13 @@
 const express = require('express');
+const CapacidadTable = require('../orm/capacidad-table');
 const DiscoTable = require('../orm/discoduro-table');
+const FuncionTable = require('../orm/funcion-table');
+const MarcaTable = require('../orm/marca-table');
 const MemoriaTable = require('../orm/memorias-table');
 const PlacaTable = require('../orm/placasmadre-table');
 const ProcessorsTable = require('../orm/processors-table');
 const TarjetaTable = require('../orm/tarjetadevideo-table');
+const TipoTable = require('../orm/tipos-table');
 const collector = express.Router();
 
 // GET
@@ -21,7 +25,11 @@ collector.get('/informacion',
   next();
   },
   function(req, res, next) {
-  res.write("<p>3. Para visualizar un equipo en específico almacenado dirígete a / + el equipo que desees buscar. </p>");
+  res.write("<p>3. Para visualizar un equipo en específico almacenado dirígete a / + el equipo que desees buscar + / + tu user + / + tu contraseña. </p>");
+  next();
+  },
+  function(req, res, next) {
+  res.write("<p>4. Para visualizar una especificación en especial dirígete a /espe/ + la especificación que desees buscar + / + tu user + / + tu contraseña. </p>");
   next();
   },
   function(req, res, next) {
@@ -74,6 +82,37 @@ collector.get('/:equipo?/:user?/:password?', function(req, res, next) {
         res.send(message)
       }
       MenssageMe(req.params.user, req.params.password)
+    } else {
+      res.send('Este tipo de equipo no está disponible por el momento')
+    }
+  }
+})
+collector.get('/espe/:especificacion?/:user?/:password?', function(req, res, next) {
+  if (req.params.user !== undefined && req.params.password !== undefined){
+    if (req.params.especificacion === 'marca') {
+      async function MessageMar (User, Password) {
+        const message = await buscarMarca(User, Password)
+        res.send(message)
+      }
+      MessageMar (req.params.user, req.params.password)
+    } else if (req.params.especificacion === 'funcion') {
+      async function MessageFun (User, Password) {
+        const message = await buscarFuncion(User, Password)
+        res.send(message)
+      }
+      MessageFun (req.params.user, req.params.password)
+    } else if (req.params.especificacion === 'capacidad') {
+      async function MessageCa (User, Password) {
+        const message = await buscarCapacidad(User, Password)
+        res.send(message)
+      }
+      MessageCa (req.params.user, req.params.password)
+    } else if (req.params.especificacion === 'tipo') {
+      async function MessageTi (User, Password) {
+        const message = await buscarTipo(User, Password)
+        res.send(message)
+      }
+      MessageTi (req.params.user, req.params.password)
     } else {
       res.send('Este tipo de equipo no está disponible por el momento')
     }
@@ -206,6 +245,46 @@ async function buscarDisco (User, Password) {
     if (user === null) return error
     const disco = await Dis(user.id_user)
     return disco
+  } catch (error) {
+    return 'Ha ocurrido un problema: ' + error.message 
+  }
+}
+async function buscarMarca (User, Password) {
+  try {
+    const user = await validarUser(User, Password)
+    if (user === null) return error
+    const marca = await MarcaTable.findAll();
+    return marca
+  } catch (error) {
+    return 'Ha ocurrido un problema: ' + error.message 
+  }
+}
+async function buscarFuncion (User, Password) {
+  try {
+    const user = await validarUser(User, Password)
+    if (user === null) return error
+    const funcion = await FuncionTable.findAll();
+    return funcion
+  } catch (error) {
+    return 'Ha ocurrido un problema: ' + error.message 
+  }
+}
+async function buscarCapacidad (User, Password) {
+  try {
+    const user = await validarUser(User, Password)
+    if (user === null) return error
+    const capacidad = await CapacidadTable.findAll();
+    return capacidad
+  } catch (error) {
+    return 'Ha ocurrido un problema: ' + error.message 
+  }
+}
+async function buscarTipo (User, Password) {
+  try {
+    const user = await validarUser(User, Password)
+    if (user === null) return error
+    const tipo = await TipoTable.findAll();
+    return tipo
   } catch (error) {
     return 'Ha ocurrido un problema: ' + error.message 
   }
