@@ -133,7 +133,7 @@ collector.delete('/:equipo?/:user?/:password?', function(req, res, next) {
         };
         MessageTi (req.params.user, req.params.password, req.params.id);
       } else {
-        res.send('Este tipo de equipo no está disponible por el momento');
+        res.send('Este tipo de especificación no está disponible por el momento');
       };
     };
   });

@@ -12,7 +12,7 @@ const collector = express.Router();
 
 // GET
 collector.get('/', function(req, res, next) {
-  res.send("Bienvenido! Este servidor te permite mantener un registro de diferentes equipos de computación. Para más información dirígete a /informacion");
+  res.send("¡Bienvenido! Este servidor te permite mantener un registro de diferentes equipos de computación. Para más información dirígete a /informacion");
 });
 
 collector.get('/informacion',
@@ -41,7 +41,7 @@ collector.get('/informacion',
   next();
   },
   function(req, res, next) {
-  res.write("<p>4. Para almacenar algún equipo dirígete a / + el nombre del equipo que desees almacenar. </p>");
+  res.write("<p>5. Para almacenar algún equipo dirígete a / + el nombre del equipo que desees almacenar. </p>");
   next();
   },
   function(req, res, next) {
@@ -49,19 +49,19 @@ collector.get('/informacion',
   next();
   },
   function(req, res, next) {
-  res.write("<p>5. Para eliminar una cuenta dirígete a / + el user + / + el contraseña. </p>");
+  res.write("<p>6. Para eliminar una cuenta dirígete a / + el user + / + el contraseña. </p>");
   next();
   },
   function(req, res, next) {
-  res.write("<p>6. Para eliminar todo un equipo dirígete a / + el nombre del equipo + / + el user + / + el contraseña. </p>");
+  res.write("<p>7. Para eliminar todo un equipo dirígete a / + el nombre del equipo + / + el user + / + el contraseña. </p>");
   next();
   },
   function(req, res, next) {
-  res.write("<p>7. Para eliminar un equipo en específico dirígete a / + el nombre del equipo + / + el id + / + el user + / + el contraseña. </p>");
+  res.write("<p>8. Para eliminar un equipo en específico dirígete a / + el nombre del equipo + / + el id + / + el user + / + el contraseña. </p>");
   next();
   },
   function(req, res, next) {
-  res.write("<p>8. Para eliminar algún dato de las especificaciones en especias dirígete a /espe/ + el nombre de la especificación + / + el id + / + el user + / + el contraseña. </p>");
+  res.write("<p>9. Para eliminar algún dato de las especificaciones en especias dirígete a /espe/ + el nombre de la especificación + / + el id + / + el user + / + el contraseña. </p>");
   next();
   },
   function(req, res, next) {
@@ -69,12 +69,12 @@ collector.get('/informacion',
   next();
   },
   function(req, res, next) {
-  res.write("<p>9. Para editar algún dato de tu cuenta dirígete a / + tu user + / + tu contraseña. </p>");
+  res.write("<p>10. Para editar algún dato de tu cuenta dirígete a / + tu user + / + tu contraseña. </p>");
   next();
   },
   function(req, res, next) {
-  res.write("<p>9. Para editar algún dato de una especificación dirígete a / + nombre de la especificación + / + id + / + tu user + / + tu contraseña. </p>");
-  next();
+  res.write("<p>11. Para editar algún dato de una especificación dirígete a / + nombre de la especificación + / + id + / + tu user + / + tu contraseña. </p>");
+  res.end();
   }
 );
 
@@ -124,6 +124,8 @@ collector.get('/:equipo?/:user?/:password?', function(req, res, next) {
     } else {
       res.send('Este tipo de equipo no está disponible por el momento');
     };
+  } else {
+    res.send('Recuerda ingresar tu user y contraseña');
   };
 });
 collector.get('/espe/:especificacion?/:user?/:password?', function(req, res, next) {
@@ -153,8 +155,10 @@ collector.get('/espe/:especificacion?/:user?/:password?', function(req, res, nex
       };
       MessageTi (req.params.user, req.params.password);
     } else {
-      res.send('Este tipo de equipo no está disponible por el momento');
+      res.send('Este tipo de especificación no está disponible por el momento');
     };
+  } else {
+    res.send('Recuerda ingresar tu user y contraseña');
   };
 });
 
@@ -180,7 +184,7 @@ async function Pro (User) {
   let pro = await ProcessorsTable.findAll({
     where : {UsersTableIdUser : User}
   });
-  if (!Pro.length) {
+  if (!pro.length) {
     pro = 'No tienes procesadores almacenados';
   };
   return pro;
