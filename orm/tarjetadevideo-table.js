@@ -10,7 +10,7 @@ const db = new Sequelize(config.db.database, config.db.user, config.db.password,
     dialect: config.db.dialect
 });
 
-class TarjetaTable extends Model {}
+class TarjetaTable extends Model {};
 
 TarjetaTable.init({
     id_tar: {
@@ -34,10 +34,10 @@ TarjetaTable.init({
     tableName: 'tarjeta'
 });
 
-TarjetaTable.Marca = TarjetaTable.belongsTo(MarcaTable)
-TarjetaTable.User = TarjetaTable.belongsTo(UsersTable)
-TarjetaTable.Funcion = TarjetaTable.belongsTo(FuncionTable)
-TarjetaTable.TiposTable = TarjetaTable.belongsTo(TipoTable)
+TarjetaTable.Marca = TarjetaTable.belongsTo(MarcaTable);
+TarjetaTable.User = TarjetaTable.belongsTo(UsersTable);
+TarjetaTable.Funcion = TarjetaTable.belongsTo(FuncionTable);
+TarjetaTable.TiposTable = TarjetaTable.belongsTo(TipoTable);
 
 TarjetaTable.sync();
 

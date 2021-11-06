@@ -1,5 +1,5 @@
 const {Sequelize, DataTypes, Model} = require('sequelize');
-const config = require('../config.json')
+const config = require('../config.json');
 
 const db = new Sequelize(config.db.database, config.db.user, config.db.password, {
     host: config.db.host,
@@ -13,7 +13,7 @@ try {
     console.log('No ha sido posible establecer una conexión con la base de datos, ' + error);
 }
 
-class UsersTable extends Model {}
+class UsersTable extends Model {};
 
 UsersTable.init({
     id_user: {

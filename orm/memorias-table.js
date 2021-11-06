@@ -10,7 +10,7 @@ const db = new Sequelize(config.db.database, config.db.user, config.db.password,
     dialect: config.db.dialect
 });
 
-class MemoriaTable extends Model {}
+class MemoriaTable extends Model {};
 
 MemoriaTable.init({
     id_me: {
@@ -34,10 +34,10 @@ MemoriaTable.init({
     tableName: 'memorias'
 });
 
-MemoriaTable.Marca = MemoriaTable.belongsTo(MarcaTable)
-MemoriaTable.User = MemoriaTable.belongsTo(UsersTable)
-MemoriaTable.Capacidad = MemoriaTable.belongsTo(CapacidadTable)
-MemoriaTable.TiposTable = MemoriaTable.belongsTo(TipoTable)
+MemoriaTable.Marca = MemoriaTable.belongsTo(MarcaTable);
+MemoriaTable.User = MemoriaTable.belongsTo(UsersTable);
+MemoriaTable.Capacidad = MemoriaTable.belongsTo(CapacidadTable);
+MemoriaTable.TiposTable = MemoriaTable.belongsTo(TipoTable);
 
 MemoriaTable.sync();
 

@@ -8,7 +8,7 @@ const db = new Sequelize(config.db.database, config.db.user, config.db.password,
     dialect: config.db.dialect
 });
 
-class ProcessorsTable extends Model {}
+class ProcessorsTable extends Model {};
 
 ProcessorsTable.init({
     id_pro: {
@@ -36,8 +36,8 @@ ProcessorsTable.init({
     tableName: 'processors'
 });
 
-ProcessorsTable.Marca = ProcessorsTable.belongsTo(MarcaTable)
-ProcessorsTable.User = ProcessorsTable.belongsTo(UsersTable)
+ProcessorsTable.Marca = ProcessorsTable.belongsTo(MarcaTable);
+ProcessorsTable.User = ProcessorsTable.belongsTo(UsersTable);
 
 ProcessorsTable.sync();
 

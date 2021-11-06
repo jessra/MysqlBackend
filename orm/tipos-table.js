@@ -1,12 +1,12 @@
 const {Sequelize, DataTypes, Model} = require('sequelize');
-const config = require('../config.json')
+const config = require('../config.json');
 
 const db = new Sequelize(config.db.database, config.db.user, config.db.password, {
     host: config.db.host,
     dialect: config.db.dialect
 });
 
-class TipoTable extends Model {}
+class TipoTable extends Model {};
 
 TipoTable.init({
     id_tipo: {

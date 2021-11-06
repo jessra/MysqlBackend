@@ -10,7 +10,7 @@ const db = new Sequelize(config.db.database, config.db.user, config.db.password,
     dialect: config.db.dialect
 });
 
-class DiscoTable extends Model {}
+class DiscoTable extends Model {};
 
 DiscoTable.init({
     id_dis: {
@@ -34,10 +34,10 @@ DiscoTable.init({
     tableName: 'discoDuro'
 });
 
-DiscoTable.Marca = DiscoTable.belongsTo(MarcaTable)
-DiscoTable.User = DiscoTable.belongsTo(UsersTable)
-DiscoTable.Funcion = DiscoTable.belongsTo(FuncionTable)
-DiscoTable.TiposTable = DiscoTable.belongsTo(TipoTable)
+DiscoTable.Marca = DiscoTable.belongsTo(MarcaTable);
+DiscoTable.User = DiscoTable.belongsTo(UsersTable);
+DiscoTable.Funcion = DiscoTable.belongsTo(FuncionTable);
+DiscoTable.TiposTable = DiscoTable.belongsTo(TipoTable);
 
 DiscoTable.sync();
 

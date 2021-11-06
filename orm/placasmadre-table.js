@@ -8,7 +8,7 @@ const db = new Sequelize(config.db.database, config.db.user, config.db.password,
     dialect: config.db.dialect
 });
 
-class PlacaTable extends Model {}
+class PlacaTable extends Model {};
 
 PlacaTable.init({
     id_pla: {
@@ -36,8 +36,8 @@ PlacaTable.init({
     tableName: 'placas'
 });
 
-PlacaTable.Marca = PlacaTable.belongsTo(MarcaTable)
-PlacaTable.User = PlacaTable.belongsTo(UsersTable)
+PlacaTable.Marca = PlacaTable.belongsTo(MarcaTable);
+PlacaTable.User = PlacaTable.belongsTo(UsersTable);
 
 PlacaTable.sync();
 
